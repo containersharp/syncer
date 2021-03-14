@@ -57,16 +57,18 @@ function copy_image(){
 # echo "last job: $LAST_JOB_RESULT"
 # exit 0
 
+touch /tmp/dispatcher-response
 while true; do
     echo_timed "Waiting for next job..."
     HTTP_CODE=$(curl -k --max-time 300 -s -d "worker=$SYNCER_ID&jobId=$LAST_JOB_ID&result=$LAST_JOB_RESULT" "$DISPATCHER_BASE_URL/workers" -o /tmp/dispatcher-response -w "%{http_code}" -X POST -H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: application/json')
 
-    if [ "$HTTP_CODE" == "200" ]; then
+    if [ "$HTTP_CODE" == "200" ] || [ "$HTTP_CODE" == "204" ]; then
         LAST_JOB=$(cat /tmp/dispatcher-response)
     else
         LAST_JOB=''
         ERROR=$(cat /tmp/dispatcher-response)
         echo_timed "Error response from dispatcher $HTTP_CODE: $ERROR"
+        sleep 1
     fi
     
     LAST_JOB_ID=''

@@ -1,7 +1,0 @@
-{
-    "id": "xILdkale",
-    "imageRepository": "hub.docker.io/xx/hehe",
-    "tag": "latest",
-    "digest": "sha256:8fdfeb300a6e46b9a699a0707986072f",
-    "authorizationToken": "the_jwt_token"
-}
