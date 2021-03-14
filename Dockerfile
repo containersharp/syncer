@@ -1,8 +1,7 @@
-FROM jijiechen-docker.pkg.coding.net/sharpcr/apps/sharpcr-registry-internal:1.0.0
+FROM jijiechen-docker.pkg.coding.net/sharpcr/apps/sharpcr-registry-internal:1.0.2
 COPY ./jq-1.6 /usr/bin/jq
 
-RUN apk add --no-cache curl
-RUN apk add --no-cache skopeo
+RUN yum -y install skopeo
 
 COPY ./sync.sh /app/
 COPY ./start.sh /app/

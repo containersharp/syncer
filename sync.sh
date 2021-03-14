@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # requires:
 # skopeo, jq, local sharpcr
@@ -37,11 +37,11 @@ function copy_image(){
 
     PULL_CREDENTIAL=''
     if [ ! -z "$SRC_TOKEN" ]; then
-        PULL_CREDENTIAL="--src-creds '$SRC_TOKEN' "
+        PULL_CREDENTIAL="--src-creds='$SRC_TOKEN' "
     fi
 
     echo_timed "Copying image $SYNC_COUNT: $SRC_IMAGE => $DEST_IMAGE"
-    echo_timed skopeo copy ${PULL_CREDENTIAL}"docker://$SRC_IMAGE" "docker://localhost:5000/$DEST_IMAGE"
+    skopeo copy --dest-tls-verify=false ${PULL_CREDENTIAL}"docker://$SRC_IMAGE" "docker://localhost:5000/$DEST_IMAGE"
     RESULT=$?
 
     if [ "$RESULT" == "0" ]; then
