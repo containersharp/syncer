@@ -24,13 +24,13 @@ function copy_image(){
 
     LAST_JOB_ID=$(echo "$JOB_STR" | jq -r ".id")
     SRC_REPO=$(echo "$JOB_STR" | jq -r ".imageRepository")
-    SRC_TAG=$(echo "$JOB_STR" | jq -r ".tag")
     SRC_DIGEST=$(echo "$JOB_STR" | jq -r ".digest")
+    SRC_TAG=$(echo "$JOB_STR" | jq -r ".tag")
     SRC_TOKEN=$(echo "$JOB_STR" | jq -r ".authorizationToken")
 
-    SRC_REF=":$SRC_TAG"
-    if [ -z "$SRC_TAG" ]; then
-        SRC_REF="@$SRC_DIGEST"
+    SRC_REF="@$SRC_DIGEST"
+    if [ -z "$SRC_DIGEST" ]; then
+        SRC_REF=":$SRC_TAG"
     fi
     SRC_IMAGE="${SRC_REPO}${SRC_REF}"
     DEST_IMAGE=$(echo "$SRC_IMAGE" | cut -d "/" -f2-)
