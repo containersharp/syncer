@@ -9,9 +9,6 @@ if [ -z "$DISPATCHER_BASE_URL" ]; then
     echo "Please specify the DISPATCHER_BASE_URL environment variable."
     exit 1
 fi
-if [ ! -z "$DISPATCHER_AUTH_TOKEN" ]; then
-    DISPATCHER_AUTH_TOKEN="-H 'Authorization: $DISPATCHER_AUTH_TOKEN' "
-fi
 
 SYNCER_ID=$(hostname -s)
 LAST_JOB=''
@@ -37,7 +34,7 @@ function copy_image(){
         SRC_REF=":$SRC_TAG"
     fi
     SRC_IMAGE="${SRC_REPO}${SRC_REF}"
-    DEST_IMAGE=$(echo "$SRC_IMAGE" | cut -d "/" -f2-)
+    DEST_IMAGE="$SRC_IMAGE" # $(echo "$SRC_IMAGE" | cut -d "/" -f2-)
 
     PULL_CREDENTIAL=''
     if [ ! -z "$SRC_TOKEN" ]; then
@@ -64,7 +61,7 @@ function copy_image(){
 touch /tmp/dispatcher-response
 while true; do
     echo_timed "Waiting for next job..."
-    HTTP_CODE=$(curl -k --max-time 300 -s -d "worker=$SYNCER_ID&jobId=$LAST_JOB_ID&result=$LAST_JOB_RESULT" "${DISPATCHER_BASE_URL}/workers" -o /tmp/dispatcher-response -w "%{http_code}" -X POST ${DISPATCHER_AUTH_TOKEN}-H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: application/json')
+    HTTP_CODE=$(curl -k --max-time 300 -s -d "worker=$SYNCER_ID&jobId=$LAST_JOB_ID&result=$LAST_JOB_RESULT" "${DISPATCHER_BASE_URL}/workers" -o /tmp/dispatcher-response -w "%{http_code}" -X POST -H 'Authorization: $DISPATCHER_AUTH_TOKEN' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: application/json')
 
     if [ "$HTTP_CODE" == "200" ] || [ "$HTTP_CODE" == "204" ]; then
         LAST_JOB=$(cat /tmp/dispatcher-response)
