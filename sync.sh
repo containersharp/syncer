@@ -41,7 +41,7 @@ function copy_image(){
         PULL_CREDENTIAL="--src-creds='$SRC_TOKEN' "
     fi
 
-    echo_timed "Copying image $SYNC_COUNT: $SRC_IMAGE => $DEST_IMAGE"
+    echo_timed "Copying image $SYNC_COUNT: $SRC_IMAGE"
     skopeo copy --dest-tls-verify=false ${PULL_CREDENTIAL}"docker://$SRC_IMAGE" "docker://localhost:5000/$DEST_IMAGE"
     RESULT=$?
 
@@ -61,7 +61,7 @@ function copy_image(){
 touch /tmp/dispatcher-response
 while true; do
     echo_timed "Waiting for next job..."
-    HTTP_CODE=$(curl -k --max-time 300 -s -d "worker=$SYNCER_ID&jobId=$LAST_JOB_ID&result=$LAST_JOB_RESULT" "${DISPATCHER_BASE_URL}/workers" -o /tmp/dispatcher-response -w "%{http_code}" -X POST -H 'Authorization: $DISPATCHER_AUTH_TOKEN' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: application/json')
+    HTTP_CODE=$(curl -k --max-time 300 -s -d "worker=$SYNCER_ID&jobId=$LAST_JOB_ID&result=$LAST_JOB_RESULT" "${DISPATCHER_BASE_URL}/workers" -o /tmp/dispatcher-response -w "%{http_code}" -X POST -H "Authorization: $DISPATCHER_AUTH_TOKEN" -H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: application/json')
 
     if [ "$HTTP_CODE" == "200" ] || [ "$HTTP_CODE" == "204" ]; then
         LAST_JOB=$(cat /tmp/dispatcher-response)
