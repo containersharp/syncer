@@ -28,8 +28,8 @@ function copy_image(){
 
     LAST_JOB_ID=$(echo "$JOB_STR" | jq -r ".id")
     SRC_REPO=$(echo "$JOB_STR" | jq -r ".imageRepository")
-    SRC_DIGEST=$(echo "$JOB_STR" | jq -r ".digest")
-    SRC_TAG=$(echo "$JOB_STR" | jq -r ".tag")
+    SRC_DIGEST=$(echo "$JOB_STR" | jq -r ".digest // empty")
+    SRC_TAG=$(echo "$JOB_STR" | jq -r ".tag // empty")
     SRC_TOKEN=$(echo "$JOB_STR" | jq -r ".authorizationToken")
 
     SRC_REF="@$SRC_DIGEST"
