@@ -1,4 +1,6 @@
-FROM jijiechen-docker.pkg.coding.net/sharpcr/apps/sharpcr-registry-internal:1.0.5
+ARG BASE_IMG_TAG=dev
+FROM jijiechen-docker.pkg.coding.net/sharpcr/apps/sharpcr-registry-internal:$BASE_IMG_TAG
+
 COPY ./jq-1.6 /usr/bin/jq
 
 RUN yum -y install skopeo
