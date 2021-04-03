@@ -85,5 +85,7 @@ while true; do
     else
         echo_timed "No new job assigned at this time."
     fi
+
+    echo '' > /tmp/dispatcher-response
     sleep .1
 done
