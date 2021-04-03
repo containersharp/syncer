@@ -10,6 +10,10 @@ if [ -z "$DISPATCHER_BASE_URL" ]; then
     exit 1
 fi
 
+if [ ! -z "$DEBUG" ]; then
+    DEBUG='--debug'
+fi
+
 SYNCER_ID=$(hostname -s)
 LAST_JOB=''
 LAST_JOB_ID=''
@@ -42,7 +46,7 @@ function copy_image(){
     fi
 
     echo_timed "Copying image $SYNC_COUNT: $SRC_IMAGE"
-    skopeo copy --dest-tls-verify=false ${PULL_CREDENTIAL}"docker://$SRC_IMAGE" "docker://localhost:5000/$DEST_IMAGE"
+    skopeo $DEBUG copy --dest-tls-verify=false ${PULL_CREDENTIAL}"docker://$SRC_IMAGE" "docker://localhost:5000/$DEST_IMAGE"
     RESULT=$?
 
     if [ "$RESULT" == "0" ]; then
